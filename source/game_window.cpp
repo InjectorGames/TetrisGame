@@ -23,13 +23,13 @@ Qt3DCore::QEntity* GameWindow::createBlockEntity()
     return entity;
 }
 
-GameWindow::GameWindow(QScreen *screen) : Qt3DExtras::Qt3DWindow(screen), updateTimer(new QTimer(this)), rootEntity(new Qt3DCore::QEntity())
+GameWindow::GameWindow(QScreen *screen) : Qt3DExtras::Qt3DWindow(screen), rootEntity(new Qt3DCore::QEntity())
 {
     setRootEntity(rootEntity);
     format().setSwapInterval(0);
 
-    connect(updateTimer, SIGNAL(timeout()), this, SLOT(requestUpdate()));
-    updateTimer->start(1000 / 60);
+    auto actionFrame = new Qt3DLogic::QFrameAction(rootEntity);
+    connect(actionFrame, SIGNAL(triggered(float)), this, SLOT(onUpdate(float)));
 
     auto camera = Qt3DExtras::Qt3DWindow::camera();
     camera->setProjectionType(Qt3DRender::QCameraLens::ProjectionType::OrthographicProjection);
@@ -47,16 +47,8 @@ GameWindow::GameWindow(QScreen *screen) : Qt3DExtras::Qt3DWindow(screen), update
 
 GameWindow::~GameWindow()
 {
-    delete updateTimer;
-    updateTimer = nullptr;
-
     delete rootEntity;
     rootEntity = nullptr;
-}
-
-void GameWindow::setRootEntity(Qt3DCore::QEntity *root)
-{
-    Qt3DExtras::Qt3DWindow::setRootEntity(root);
 }
 
 void GameWindow::resizeEvent(QResizeEvent*  event)
@@ -83,15 +75,7 @@ void GameWindow::resizeEvent(QResizeEvent*  event)
     }
 }
 
-bool GameWindow::event(QEvent* event)
+void GameWindow::onUpdate(float dt)
 {
-    if(event->type() == QEvent::UpdateRequest)
-        onUpdate();
-
-    return Qt3DExtras::Qt3DWindow::event(event);
-}
-
-void GameWindow::onUpdate()
-{
-    camera()->rollAboutViewCenter(1.0f);
+    camera()->rollAboutViewCenter(dt * 100.0f);
 }

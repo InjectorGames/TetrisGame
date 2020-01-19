@@ -5,6 +5,7 @@
 #include <Qt3DExtras>
 #include <QCameraLens>
 #include <QResizeEvent>
+#include <QFrameAction>
 
 class GameWindow : public Qt3DExtras::Qt3DWindow
 {
@@ -15,15 +16,12 @@ public:
     ~GameWindow();
 
 protected:
-    QTimer* updateTimer;
     Qt3DCore::QEntity* rootEntity;
-
-    void onUpdate();
     Qt3DCore::QEntity* createBlockEntity();
 
-    void setRootEntity(Qt3DCore::QEntity *root);
+public Q_SLOTS:
     void resizeEvent(QResizeEvent* event) override;
-    bool event(QEvent *event) override;
+    void onUpdate(float dt);
 };
 
 #endif // GAME_WINDOW_H
