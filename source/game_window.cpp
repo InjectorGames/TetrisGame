@@ -4,18 +4,16 @@ Qt3DCore::QEntity* GameWindow::createBlockEntity()
 {
     auto entity = new Qt3DCore::QEntity(rootEntity);
 
-    auto planeMesh = new Qt3DExtras::QPlaneMesh();
+    auto planeMesh = new Qt3DExtras::QPlaneMesh;
     planeMesh->setWidth(1.0f);
     planeMesh->setHeight(1.0f);
     entity->addComponent(planeMesh);
 
-    auto transform = new Qt3DCore::QTransform();
-    transform->setScale3D(QVector3D(1.0f, 1.0f, 1.0f));
-    transform->setRotation(QQuaternion::fromAxisAndAngle(QVector3D(1, 0, 0), 90.0f));
-    transform->setTranslation(QVector3D(0.0f, 0.0f, -1.0f));
+    auto transform = new Qt3DCore::QTransform;
+    transform->setRotation(QQuaternion::fromEulerAngles(180.0f, 90.0f, 90.0f));
     entity->addComponent(transform);
 
-    auto texture = new Qt3DRender::QTextureLoader();
+    auto texture = new Qt3DRender::QTextureLoader;
     texture->setSource(QUrl(QStringLiteral("qrc:/sprite/block/classic/blue")));
     auto material = new Qt3DExtras::QTextureMaterial(rootEntity);
     material->setTexture(texture);
@@ -25,12 +23,17 @@ Qt3DCore::QEntity* GameWindow::createBlockEntity()
     return entity;
 }
 
-GameWindow::GameWindow(QScreen *screen) : Qt3DExtras::Qt3DWindow(screen), rootEntity(new Qt3DCore::QEntity())
+GameWindow::GameWindow(QScreen *screen) : Qt3DExtras::Qt3DWindow(screen), updateTimer(new QTimer(this)), rootEntity(new Qt3DCore::QEntity())
 {
     setRootEntity(rootEntity);
+    format().setSwapInterval(0);
+
+    connect(updateTimer, SIGNAL(timeout()), this, SLOT(requestUpdate()));
+    updateTimer->start(1000 / 60);
 
     auto camera = Qt3DExtras::Qt3DWindow::camera();
     camera->setProjectionType(Qt3DRender::QCameraLens::ProjectionType::OrthographicProjection);
+    camera->setPosition(QVector3D(0.0f, 0.0f, 10.0f));
     camera->setNearPlane(0.1f);
     camera->setFarPlane(100.0f);
     camera->setLeft(-10);
@@ -38,11 +41,15 @@ GameWindow::GameWindow(QScreen *screen) : Qt3DExtras::Qt3DWindow(screen), rootEn
     camera->setBottom(-10);
     camera->setTop(10);
 
+
     auto block = createBlockEntity();
 }
 
 GameWindow::~GameWindow()
 {
+    delete updateTimer;
+    updateTimer = nullptr;
+
     delete rootEntity;
     rootEntity = nullptr;
 }
@@ -74,4 +81,17 @@ void GameWindow::resizeEvent(QResizeEvent*  event)
         camera->setBottom(-10.0f / aspectRatio);
         camera->setTop(10.0f / aspectRatio);
     }
+}
+
+bool GameWindow::event(QEvent* event)
+{
+    if(event->type() == QEvent::UpdateRequest)
+        onUpdate();
+
+    return Qt3DExtras::Qt3DWindow::event(event);
+}
+
+void GameWindow::onUpdate()
+{
+    camera()->rollAboutViewCenter(1.0f);
 }

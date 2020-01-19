@@ -1,6 +1,7 @@
 #ifndef GAME_WINDOW_H
 #define GAME_WINDOW_H
 
+#include <QTimer>
 #include <Qt3DExtras>
 #include <QCameraLens>
 #include <QResizeEvent>
@@ -14,12 +15,15 @@ public:
     ~GameWindow();
 
 protected:
+    QTimer* updateTimer;
     Qt3DCore::QEntity* rootEntity;
 
-    void setRootEntity(Qt3DCore::QEntity *root);
+    void onUpdate();
     Qt3DCore::QEntity* createBlockEntity();
 
+    void setRootEntity(Qt3DCore::QEntity *root);
     void resizeEvent(QResizeEvent* event) override;
+    bool event(QEvent *event) override;
 };
 
 #endif // GAME_WINDOW_H
