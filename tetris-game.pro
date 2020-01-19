@@ -1,4 +1,5 @@
 QT       += core gui
+QT       += 3dcore 3drender 3dextras
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,14 +17,26 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    source/array_2d.cpp \
+    source/block_array_2d.cpp \
+    source/game_window.cpp \
     source/main.cpp \
-    source/open_gl_window.cpp \
     source/tetris.cpp
 
 HEADERS += \
-    source/open_gl_window.h
+    source/array_2d.h \
+    source/block_array_2d.h \
+    source/game_window.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    shaders/unlit.fsh \
+    shaders/unlit.vsh \
+    sprites/classic/blue.png
+
+RESOURCES += \
+    sprites/sprite.qrc
