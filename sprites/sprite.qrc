@@ -1,5 +1,0 @@
-<RCC>
-    <qresource prefix="/sprite/block/classic">
-        <file alias="blue">classic/blue.png</file>
-    </qresource>
-</RCC>

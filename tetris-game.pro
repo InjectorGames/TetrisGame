@@ -1,9 +1,9 @@
-QT       += core gui
-QT       += 3dcore 3dlogic 3drender 3dextras
+QT += core gui
+QT += 3dcore 3drender 3dinput 3dlogic 3dextras 3danimation
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-CONFIG += c++11
+CONFIG += c++17
 
 # The following define makes your compiler emit warnings if you use
 # any Qt feature that has been marked deprecated (the exact warnings
@@ -14,29 +14,32 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    source/array_2d.cpp \
-    source/block_array_2d.cpp \
-    source/game_window.cpp \
     source/main.cpp \
     source/tetris.cpp
 
 HEADERS += \
-    source/array_2d.h \
-    source/block_array_2d.h \
-    source/game_window.h
-
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
+    source/array2.hpp \
+    source/blockarray2d.hpp \
+    source/blockmaterial.hpp \
+    source/gamewindow.hpp
 
 DISTFILES += \
+    shaders/colortexture.fsh \
+    shaders/colortexture.vsh \
     shaders/unlit.fsh \
     shaders/unlit.vsh \
     sprites/classic/blue.png
 
 RESOURCES += \
-    sprites/sprite.qrc
+    textures/sprite.qrc
+
+INCLUDEPATH += \
+    source/
+
+# Default rules for deployment.
+qnx: target.path = /tmp/$${TARGET}/bin
+else: unix:!android: target.path = /opt/$${TARGET}/bin
+!isEmpty(target.path): INSTALLS += target

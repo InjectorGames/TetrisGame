@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/texture/block/classic">
+        <file alias="blue">classic/blue.png</file>
+    </qresource>
+    <qresource prefix="/texture/background/classic">
+        <file alias="default">classic/background.png</file>
+    </qresource>
+</RCC>
