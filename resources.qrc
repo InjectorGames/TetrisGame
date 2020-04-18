@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/shader/vertex">
+        <file alias="unlit">shaders/unlit.vsh</file>
+    </qresource>
+    <qresource prefix="/shader/fragment">
+        <file alias="unlit">shaders/unlit.fsh</file>
+    </qresource>
+    <qresource prefix="/sprite/block">
+        <file alias="blue">sprites/classic/blue.png</file>
+    </qresource>
+</RCC>
